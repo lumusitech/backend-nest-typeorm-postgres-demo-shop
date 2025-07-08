@@ -14,10 +14,6 @@
 
 2. Create `.env` file from `.env.template`. Then, Fill in the required environment variables in the `.env` file.
 
-   ```sh
-   cp .env.example .env
-   ```
-
 3. Get up Docker environment
 
    ```sh
