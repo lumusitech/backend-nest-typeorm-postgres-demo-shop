@@ -38,4 +38,9 @@ export class CreateProductDto {
   @IsPositive()
   @IsOptional()
   stock?: number;
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  tags?: string[];
 }
