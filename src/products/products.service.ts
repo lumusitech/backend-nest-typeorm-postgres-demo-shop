@@ -7,6 +7,8 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { validate as isUUID } from 'uuid';
+import { PaginationDto } from '../common/dto/pagination.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
@@ -42,19 +44,49 @@ export class ProductsService {
     }
   }
 
-  async findAll() {
-    return await this.productRepository.find({});
+  async findAll(paginationDto: PaginationDto) {
+    const { limit = 10, offset = 0 } = paginationDto;
+    return await this.productRepository.find({
+      take: limit,
+      skip: offset,
+      // TODO: add relations
+    });
   }
 
-  async findOne(id: string) {
-    const product = await this.productRepository.findOneBy({ id });
-    if (!product)
-      throw new NotFoundException(`Product with id ${id} not found`);
+  async findOne(term: string) {
+    if (isUUID(term)) {
+      return await this.productRepository.findOneBy({ id: term });
+    } else {
+      const queryBuider = this.productRepository.createQueryBuilder();
+      const product = await queryBuider
+        .where('UPPER(title) =:title or slug =:slug', {
+          title: term.toUpperCase(),
+          slug: term.toLowerCase(),
+        })
+        .getOne();
 
-    return product;
+      if (!product)
+        throw new BadRequestException(`Product with ${term} not found`);
+
+      return product;
+    }
   }
 
-  update(id: string, updateProductDto: UpdateProductDto) {}
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    const product = await this.productRepository.preload({
+      id,
+      ...updateProductDto,
+    });
+
+    if (!product) throw new NotFoundException(`Product with ${id} not found`);
+
+    try {
+      await this.productRepository.save(product);
+      return product;
+    } catch (error) {
+      this.handleDBExceptions(error);
+    }
+  }
 
   async remove(id: string) {
     //? Other option - only one request
@@ -63,8 +95,8 @@ export class ProductsService {
     // return id;
 
     //? Other option - two requests (find and then remove)
-    const product = await this.findOne(id);
-    await this.productRepository.remove(product);
+    await this.findOne(id);
+    await this.productRepository.delete({ id });
   }
 
   private handleDBExceptions(error: any) {
