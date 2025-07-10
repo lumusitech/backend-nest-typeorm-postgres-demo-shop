@@ -8,14 +8,14 @@ export class User {
   @Column({ type: 'text', unique: true })
   email: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', select: false })
   password: string;
 
   @Column({ type: 'text' })
   fullname: string;
 
   //? Postgres accept boolean type as bool
-  @Column({ type: 'bool', default: true })
+  @Column({ type: 'bool', default: true, select: false })
   isActive: boolean;
 
   @Column({ type: 'text', array: true, default: ['user'] })
