@@ -62,6 +62,4 @@ export class Product {
       .replaceAll(' ', '_')
       .replaceAll("'", '');
   }
-
-  // TODO: add tags and images props
 }
