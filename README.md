@@ -26,4 +26,10 @@
    yarn start:dev
    ```
 
-5. Open [http://localhost:3000](http://localhost:3000)
+5. Load test data to database for development
+
+   ```http
+   GET http://localhost:3000/api/seed
+   ```
+
+6. Open [http://localhost:3000](http://localhost:3000)
