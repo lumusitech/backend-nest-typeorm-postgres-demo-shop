@@ -28,10 +28,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     //! const user = await this.userRepository.findOneBy({ email });
 
     //? Solution: Make a custom query with the properties we need
-    const user = await this.userRepository.findOne({
-      where: { id },
-      select: { id: true, isActive: true },
-    });
+    const user = await this.userRepository.findOneBy({ id });
 
     if (!user) throw new UnauthorizedException('Token not valid');
 

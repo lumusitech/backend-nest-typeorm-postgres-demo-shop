@@ -21,7 +21,7 @@ export class User {
   fullname: string;
 
   //? Postgres accept boolean type as bool
-  @Column({ type: 'bool', default: true, select: false })
+  @Column({ type: 'bool', default: true })
   isActive: boolean;
 
   @Column({ type: 'text', array: true, default: ['user'] })
