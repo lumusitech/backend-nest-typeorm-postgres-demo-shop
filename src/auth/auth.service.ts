@@ -30,12 +30,11 @@ export class AuthService {
         password: bcrypt.hashSync(password, 10),
       });
 
-      // TODO: return JSONWebToken
-      const savedUser = await this.userRepository.save(user);
+      await this.userRepository.save(user);
 
       return {
-        ...savedUser,
-        token: this.getJwtPayload({ email: user.email }),
+        ...user,
+        token: this.getJwtPayload({ id: user.id }),
       };
     } catch (error) {
       this.handleDbErrors(error);
@@ -47,7 +46,7 @@ export class AuthService {
 
     const user = await this.userRepository.findOne({
       where: { email },
-      select: { email: true, password: true },
+      select: { email: true, password: true, id: true },
     });
 
     if (!user)
@@ -58,7 +57,7 @@ export class AuthService {
 
     return {
       ...user,
-      token: this.getJwtPayload({ email: user.email }),
+      token: this.getJwtPayload({ id: user.id }),
     };
   }
 
