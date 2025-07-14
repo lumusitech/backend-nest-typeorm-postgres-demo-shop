@@ -23,11 +23,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: JwtPayload): Promise<User> {
     const { id } = payload;
 
-    //? with this, we can get the user with the isActive property,
-    //?  because was marked as selected: false within the user entity
-    //! const user = await this.userRepository.findOneBy({ email });
-
-    //? Solution: Make a custom query with the properties we need
     const user = await this.userRepository.findOneBy({ id });
 
     if (!user) throw new UnauthorizedException('Token not valid');

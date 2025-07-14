@@ -76,4 +76,11 @@ export class AuthService {
       'Unexpected error, check server logs',
     );
   }
+
+  checkAuthStatus(user: User) {
+    return {
+      ...user,
+      token: this.getJwtPayload({ id: user.id }),
+    };
+  }
 }
