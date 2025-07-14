@@ -37,10 +37,20 @@ export class AuthController {
     @Headers() headers: IncomingHttpHeaders,
   ) {
     return {
+      ok: true,
       user,
       email,
       rawHeaders,
       headers,
+    };
+  }
+
+  @Get('private2')
+  @UseGuards(AuthGuard())
+  testingPrivateRoute2(@GetUser() user: User) {
+    return {
+      ok: true,
+      user,
     };
   }
 }
