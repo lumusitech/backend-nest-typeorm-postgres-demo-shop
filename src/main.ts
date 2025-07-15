@@ -18,7 +18,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Demo Shop API')
-    .setDescription('A Demo Shop API')
+    .setDescription('A Demo Shop Restfull API endpoints')
     .setVersion('0.1')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
